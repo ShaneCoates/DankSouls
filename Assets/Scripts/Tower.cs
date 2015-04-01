@@ -14,7 +14,7 @@ public class Tower : MonoBehaviour {
 	void Update () {
 		target = FindClosest ();
 		Vector3 targetDir = target.position - transform.position;
-
+        targetDir.y = 0;
 		float step = speed * Time.deltaTime;
 
 		Vector3 newDir = Vector3.RotateTowards (transform.forward, targetDir, step, 0.0f);

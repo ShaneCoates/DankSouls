@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Minion : MonoBehaviour {
 	GameObject target;
 	// Use this for initialization
 	void Start () {
-		transform.position = new Vector3 (Random.Range (-20, 20), 0.5f, Random.Range (-9, 9));
 		FindClosest ();
 	}
 
 	void FindClosest() {
 		GameObject[] gos;
-		gos = GameObject.FindGameObjectsWithTag("Tower"); 
+        gos = GameObject.FindGameObjectsWithTag("Finish"); 
 		float distance = Mathf.Infinity; 
 		Vector3 position = transform.position; 
 		
@@ -24,12 +24,12 @@ public class Minion : MonoBehaviour {
 					distance = currDistance; 
 				} 
 			}
-		} 
-		GetComponent<NavMeshAgent> ().destination = target.transform.position;
+		}
+    	GetComponent<NavMeshAgent> ().destination = target.transform.position;
 	}
 
 	void OnTriggerEnter(Collider other) {
-		if (other.gameObject.tag == "Tower") {
+		if (other.gameObject.tag == "Finish") {
 			other.gameObject.SetActive(false);
 			GameObject.Destroy(other.gameObject);
 			FindClosest();
@@ -38,5 +38,6 @@ public class Minion : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+       
 	}
 }
