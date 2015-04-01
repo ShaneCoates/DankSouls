@@ -6,6 +6,7 @@ public class Tower : MonoBehaviour {
 	GameObject target;
     public GameObject bullet;
 	float speed = 3f;
+    public float range;
 	// Use this for initialization
 	void Start () {
 	
@@ -16,6 +17,9 @@ public class Tower : MonoBehaviour {
 		target = FindClosest ();
 		Vector3 targetDir = target.transform.position - transform.position;
         targetDir.y = 0;
+        if (range >= targetDir.sqrMagnitude) {
+            Shoot();
+        }
 		float step = speed * Time.deltaTime;
 
 		Vector3 newDir = Vector3.RotateTowards (transform.forward, targetDir, step, 0.0f);
@@ -33,6 +37,7 @@ public class Tower : MonoBehaviour {
     void Shoot() {
         GameObject g = GameObject.Instantiate(bullet);
         g.GetComponent<Bullet>().target = target;
+        g.transform.position = transform.position;
     }
 
 	GameObject FindClosest() {
