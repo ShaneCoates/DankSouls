@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class Minion : MonoBehaviour {
 	GameObject target;
+    int health = 5;
 	// Use this for initialization
 	void Start () {
 		FindClosest ();
@@ -34,6 +35,12 @@ public class Minion : MonoBehaviour {
 			GameObject.Destroy(other.gameObject);
 			FindClosest();
 		}
+        if(other.gameObject.tag == "Bullet") {
+            health -= 1;
+            Debug.Log(health);
+            GameObject.Destroy(other.gameObject);
+            
+        }
 	}
 
 	// Update is called once per frame

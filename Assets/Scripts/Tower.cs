@@ -3,8 +3,9 @@ using System.Collections;
 
 public class Tower : MonoBehaviour {
 	GameObject closest;
-	Transform target;
-	float speed = 1f;
+	GameObject target;
+    public GameObject bullet;
+	float speed = 3f;
 	// Use this for initialization
 	void Start () {
 	
@@ -13,7 +14,7 @@ public class Tower : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		target = FindClosest ();
-		Vector3 targetDir = target.position - transform.position;
+		Vector3 targetDir = target.transform.position - transform.position;
         targetDir.y = 0;
 		float step = speed * Time.deltaTime;
 
@@ -22,8 +23,19 @@ public class Tower : MonoBehaviour {
 
 		transform.rotation = Quaternion.LookRotation (newDir);
 
+
+        if(Input.GetKeyDown(KeyCode.A)) {
+            Shoot();
+        }
+
 	}
-	Transform FindClosest() {
+
+    void Shoot() {
+        GameObject g = GameObject.Instantiate(bullet);
+        g.GetComponent<Bullet>().target = target;
+    }
+
+	GameObject FindClosest() {
 		GameObject[] gos;
 		gos = GameObject.FindGameObjectsWithTag("Minion"); 
 		float distance = Mathf.Infinity; 
@@ -37,7 +49,6 @@ public class Tower : MonoBehaviour {
 				distance = currDistance; 
 			} 
 		} 
-		Transform trans = closest.transform;
-		return trans;
+        return closest;
 	}
 }
