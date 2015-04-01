@@ -5,7 +5,6 @@ public class Minion : MonoBehaviour {
 	GameObject target;
 	// Use this for initialization
 	void Start () {
-		Debug.Log (GetComponent<BoxCollider> ().isTrigger);
 		transform.position = new Vector3 (Random.Range (-20, 20), 0.5f, Random.Range (-9, 9));
 		FindClosest ();
 	}
@@ -24,27 +23,20 @@ public class Minion : MonoBehaviour {
 					target = go; 
 					distance = currDistance; 
 				} 
-			} else {
-				Debug.Log ("dead");
 			}
 		} 
-		Debug.Log(GetComponent<NavMeshAgent>().destination);
 		GetComponent<NavMeshAgent> ().destination = target.transform.position;
-
 	}
 
 	void OnTriggerEnter(Collider other) {
-		Debug.Log("hit");
-
 		if (other.gameObject.tag == "Tower") {
 			other.gameObject.SetActive(false);
 			GameObject.Destroy(other.gameObject);
-			Debug.Log(GetComponent<NavMeshAgent>().destination);
+			FindClosest();
 		}
 	}
 
 	// Update is called once per frame
 	void Update () {
-		FindClosest();
 	}
 }
