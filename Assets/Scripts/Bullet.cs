@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Vector3 diff = (transform.position - target.transform.position);
+        //Vector3 diff = (transform.position - target.transform.position);
         float step = 10.0f * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, target.transform.position, step);
 	}
