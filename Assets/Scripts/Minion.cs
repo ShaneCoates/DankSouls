@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class Minion : MonoBehaviour {
 	GameObject target;
     public Camera cam;
-    int health = 5;
+    public int health = 5;
 	// Use this for initialization
 	void Start () {
 		FindClosest ();
@@ -40,7 +40,9 @@ public class Minion : MonoBehaviour {
             health -= 1;
             Debug.Log(health);
             GameObject.Destroy(other.gameObject);
-            
+            if(health <= 0) {
+                GameObject.Destroy(gameObject);
+            }
         }
 	}
 

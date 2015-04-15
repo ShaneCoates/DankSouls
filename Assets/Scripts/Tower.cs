@@ -7,6 +7,8 @@ public class Tower : MonoBehaviour {
     public GameObject bullet;
 	float speed = 3f;
     public float range;
+    public float cooldown;
+    float timer;
 	// Use this for initialization
 	void Start () {
 	
@@ -14,11 +16,15 @@ public class Tower : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        timer += Time.deltaTime;
 		target = FindClosest ();
 		Vector3 targetDir = target.transform.position - transform.position;
         targetDir.y = 0;
-        if (range >= targetDir.sqrMagnitude) {
-            Shoot();
+        if (timer > cooldown) {
+            if (range >= targetDir.sqrMagnitude) {
+                Shoot();
+                timer = 0;
+            }
         }
 		float step = speed * Time.deltaTime;
 
@@ -26,11 +32,6 @@ public class Tower : MonoBehaviour {
 		Debug.DrawRay (transform.position, newDir, Color.red);
 
 		transform.rotation = Quaternion.LookRotation (newDir);
-
-
-        if(Input.GetKeyDown(KeyCode.A)) {
-            Shoot();
-        }
 
 	}
 
