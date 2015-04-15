@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class Minion : MonoBehaviour {
 	GameObject target;
+    public Camera cam;
     int health = 5;
 	// Use this for initialization
 	void Start () {
@@ -45,6 +46,7 @@ public class Minion : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-       
+    
+
 	}
 }
