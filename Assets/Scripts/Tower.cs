@@ -45,7 +45,7 @@ public class Tower : MonoBehaviour {
                 }
             }
         }
-        GetComponent<Renderer>().material.color = new Vector4(1, (float)(health / maxHealth), (float)(health / maxHealth), 1); 
+        GetComponent<Renderer>().material.color = new Vector4(1, ((float)health / maxHealth), ((float)health / maxHealth), 1); 
 	}
 
     void OnMouseEnter() {

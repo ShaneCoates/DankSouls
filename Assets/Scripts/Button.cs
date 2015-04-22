@@ -17,14 +17,17 @@ public class Button : MonoBehaviour {
 	}
 
     public void Press() {
-        int count = 1;
-        if (type == Minion.minionType.eSkeleton) count = 5;
-        if (type == Minion.minionType.eBurningSkull) count = 2;
-        if (type == Minion.minionType.eImp) count = 2;
+        if (manager.souls >= (int)type) {
+            int count = 1;
+            if (type == Minion.minionType.eSkeleton) count = 5;
+            if (type == Minion.minionType.eBurningSkull) count = 2;
+            if (type == Minion.minionType.eImp) count = 2;
 
-        for(int i = 0; i < count; ++i) {
-            Minion obj = GameObject.Instantiate(minion);
-            obj.SetType(type);
+            for (int i = 0; i < count; ++i) {
+                Minion obj = GameObject.Instantiate(minion);
+                obj.SetType(type);
+            }
+            manager.souls -= (int)type;
         }
     }
 }

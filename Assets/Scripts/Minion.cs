@@ -10,13 +10,14 @@ public class Minion : MonoBehaviour {
     public int armour;
     public int damage;
     public float cooldown = 1;
+    public int cost;
     public enum minionType
     {
-        eSkeleton,
-        eBurningSkull,
-        eImp, 
-        eDemon,
-        eArchDemon,
+        eSkeleton = 5,
+        eBurningSkull = 10,
+        eImp = 15, 
+        eDemon = 30,
+        eArchDemon = 40,
     }
     public minionType type;
 	// Use this for initialization
@@ -83,7 +84,6 @@ public class Minion : MonoBehaviour {
         {
             cooldown -= Time.deltaTime;
             if (cooldown <= 0) {
-                Debug.Log("die tower");
                 target.GetComponent<Tower>().health -= damage;
                 if (target.GetComponent<Tower>().health <= 0) {
                     target.SetActive(false);
@@ -102,26 +102,31 @@ public class Minion : MonoBehaviour {
             speed = 5;
             armour = 5;
             damage = 0;
+            cost = 5;
         } else if (type == minionType.eBurningSkull)  {
             health = 20;
             speed = 4;
             armour = 4;
             damage = 5;
+            cost = 10;
         } else if(type == minionType.eImp) {
             health = 6;
             speed = 10;
             armour = 2;
             damage = 0;
+            cost = 15;
         } else if(type == minionType.eDemon) {
             health = 30;
             speed = 3;
             armour = 7;
             damage = 10;
+            cost = 30;
         } else if(type == minionType.eArchDemon) {
             health = 60;
             speed = 2;
             armour = 10;
             damage = 0;
+            cost = 40;
         }
 
         FindClosest();
