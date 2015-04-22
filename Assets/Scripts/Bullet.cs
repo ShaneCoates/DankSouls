@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Bullet : MonoBehaviour {
     public GameObject target;
+    public int damage;
 	// Use this for initialization
 	void Start () {
 	

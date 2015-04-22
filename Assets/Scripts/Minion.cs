@@ -6,14 +6,34 @@ public class Minion : MonoBehaviour {
 	GameObject target;
     public Camera cam;
     public int health = 5;
+    public int speed;
+    public int armour;
+    public int damage;
+    public float cooldown = 1;
+    public enum minionType
+    {
+        eSkeleton,
+        eBurningSkull,
+        eImp, 
+        eDemon,
+        eArchDemon,
+    }
+    public minionType type;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		FindClosest ();
 	}
 
 	void FindClosest() {
 		GameObject[] gos;
-        gos = GameObject.FindGameObjectsWithTag("Finish"); 
+        if (damage > 0) {
+            gos = GameObject.FindGameObjectsWithTag("Tower"); 
+            if(gos.Length <= 0) {
+                gos = GameObject.FindGameObjectsWithTag("Finish"); 
+            }
+        } else {
+            gos = GameObject.FindGameObjectsWithTag("Finish"); 
+        }
 		float distance = Mathf.Infinity; 
 		Vector3 position = transform.position; 
 		
@@ -28,6 +48,7 @@ public class Minion : MonoBehaviour {
 			}
 		}
     	GetComponent<NavMeshAgent> ().destination = target.transform.position;
+        GetComponent<NavMeshAgent>().acceleration = speed;
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -37,8 +58,7 @@ public class Minion : MonoBehaviour {
 			FindClosest();
 		}
         if(other.gameObject.tag == "Bullet") {
-            health -= 1;
-            Debug.Log(health);
+            health -= other.gameObject.GetComponent<Bullet>().damage;
             GameObject.Destroy(other.gameObject);
             if(health <= 0) {
                 GameObject.Destroy(gameObject);
@@ -46,9 +66,65 @@ public class Minion : MonoBehaviour {
         }
 	}
 
+    void OnTriggerStay(Collider other) {
+        if (other.gameObject.tag == "Tower") {
+            Debug.Log("tower");
+        }
+    }
+
 	// Update is called once per frame
 	void Update () {
-    
-
+        if(!target.activeInHierarchy) {
+            FindClosest();
+        }               
+        
+        var distance = Vector3.Distance(transform.position, target.transform.position);
+        if (distance <= 2)
+        {
+            cooldown -= Time.deltaTime;
+            if (cooldown <= 0) {
+                Debug.Log("die tower");
+                target.GetComponent<Tower>().health -= damage;
+                if (target.GetComponent<Tower>().health <= 0) {
+                    target.SetActive(false);
+                    FindClosest();
+                }
+                cooldown = 0.7f;
+            }
+        }
 	}
+
+    public void SetType(minionType _type) {
+        type = _type;
+        if (type == minionType.eSkeleton)
+        {
+            health = 10;
+            speed = 5;
+            armour = 5;
+            damage = 0;
+        } else if (type == minionType.eBurningSkull)  {
+            health = 20;
+            speed = 4;
+            armour = 4;
+            damage = 5;
+        } else if(type == minionType.eImp) {
+            health = 6;
+            speed = 10;
+            armour = 2;
+            damage = 0;
+        } else if(type == minionType.eDemon) {
+            health = 30;
+            speed = 3;
+            armour = 7;
+            damage = 10;
+        } else if(type == minionType.eArchDemon) {
+            health = 60;
+            speed = 2;
+            armour = 10;
+            damage = 0;
+        }
+
+        FindClosest();
+
+    }
 }

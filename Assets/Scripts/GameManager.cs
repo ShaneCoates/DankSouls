@@ -1,8 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
-    public Minion minion;
+    public int souls;
+    public Text soulsText;
+    float soulsPerSecond = 2;
+    float timer;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -10,9 +15,13 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetMouseButtonDown(0)) {
-            Minion obj = GameObject.Instantiate(minion);
-            obj.health = 5;
+        timer += Time.deltaTime;
+
+        if(timer >= (1 / soulsPerSecond)) {
+            timer = 0;
+            ++souls;
         }
+
+        soulsText.text = "Souls: " + souls;
 	}
 }
