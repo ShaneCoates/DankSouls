@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class Minion : MonoBehaviour {
 	GameObject target;
+    public Camera cam;
     public int health = 5;
     public int speed;
     public int armour;
