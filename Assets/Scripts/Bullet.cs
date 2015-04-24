@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour {
             GameObject.Destroy(gameObject);
         }
         //Vector3 diff = (transform.position - target.transform.position);
-        float step = 10.0f * Time.deltaTime;
+        float step = 100.0f * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, target.transform.position, step);
 	}
 }

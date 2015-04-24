@@ -4,13 +4,17 @@ using UnityEngine.UI;
 
 public class Minion : MonoBehaviour {
 	GameObject target;
-    public Camera cam;
     public int health = 5;
     public int speed;
     public int armour;
     public int damage;
     public float cooldown = 1;
     public int cost;
+    public Sprite side;
+    public Sprite up;
+    public Sprite down;
+    Vector3 lastPos;
+    Vector3 theScale;
     public enum minionType
     {
         eSkeleton = 5,
@@ -23,6 +27,9 @@ public class Minion : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		FindClosest ();
+        GetComponent<NavMeshAgent>().updateRotation = false;
+        theScale = transform.localScale;
+        //transform.rotation = new Quaternion(90, transform.rotation.y, transform.rotation.z, 1);
 	}
 
 	void FindClosest() {
@@ -33,11 +40,11 @@ public class Minion : MonoBehaviour {
                 gos = GameObject.FindGameObjectsWithTag("Finish"); 
             }
         } else {
-            gos = GameObject.FindGameObjectsWithTag("Finish"); 
+            gos = GameObject.FindGameObjectsWithTag("Finish");
         }
 		float distance = Mathf.Infinity; 
-		Vector3 position = transform.position; 
-		
+		Vector3 position = transform.position;
+
 		foreach (GameObject go in gos)  { 
 			if(go.activeInHierarchy == true) {
 				Vector3 diff = (go.transform.position - position);
@@ -77,9 +84,10 @@ public class Minion : MonoBehaviour {
 	void Update () {
         if(!target.activeInHierarchy) {
             FindClosest();
+            Debug.Log("it died");
         }               
         
-        var distance = Vector3.Distance(transform.position, target.transform.position);
+        float distance = Vector3.Distance(transform.position, target.transform.position);
         if (distance <= 2)
         {
             cooldown -= Time.deltaTime;
@@ -92,6 +100,29 @@ public class Minion : MonoBehaviour {
                 cooldown = 0.7f;
             }
         }
+        Vector3 heading = lastPos - transform.position;
+        float dist = heading.magnitude;
+        Vector3 direction = heading / dist;
+
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.z)) {
+           //Side
+            if(direction.x >= 0) {
+                GetComponent<SpriteRenderer>().sprite = side;
+                transform.localScale = theScale;
+            } else {
+                GetComponent<SpriteRenderer>().sprite = side;
+                Vector3 newScale = theScale;
+                newScale.x *= -1;
+                transform.localScale = newScale;
+            }
+        } else {
+            if (direction.z >= 0) {
+                GetComponent<SpriteRenderer>().sprite = up;
+            } else {
+                GetComponent<SpriteRenderer>().sprite = down;
+            }
+        }
+        lastPos = transform.position;
 	}
 
     public void SetType(minionType _type) {
@@ -99,31 +130,31 @@ public class Minion : MonoBehaviour {
         if (type == minionType.eSkeleton)
         {
             health = 10;
-            speed = 5;
+            speed = 50;
             armour = 5;
             damage = 0;
             cost = 5;
         } else if (type == minionType.eBurningSkull)  {
             health = 20;
-            speed = 4;
+            speed = 40;
             armour = 4;
             damage = 5;
             cost = 10;
         } else if(type == minionType.eImp) {
             health = 6;
-            speed = 10;
+            speed = 100;
             armour = 2;
             damage = 0;
             cost = 15;
         } else if(type == minionType.eDemon) {
             health = 30;
-            speed = 3;
+            speed = 30;
             armour = 7;
             damage = 10;
             cost = 30;
         } else if(type == minionType.eArchDemon) {
             health = 60;
-            speed = 2;
+            speed = 20;
             armour = 10;
             damage = 0;
             cost = 40;

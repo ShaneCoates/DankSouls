@@ -39,7 +39,9 @@ public class Tower : MonoBehaviour {
 		    Vector3 targetDir = target.transform.position - transform.position;
             targetDir.y = 0;
             if (timer > cooldown) {
-                if (range >= targetDir.sqrMagnitude) {
+                print(range);
+                print(targetDir.sqrMagnitude);
+                if ((range * 10) >= targetDir.sqrMagnitude) {
                     Shoot();
                     timer = 0;
                 }
@@ -72,7 +74,7 @@ public class Tower : MonoBehaviour {
 		
 		foreach (GameObject go in gos)  { 
 			Vector3 diff = (go.transform.position - position);
-			float currDistance = diff.sqrMagnitude; 
+			float currDistance = diff.sqrMagnitude;
 			if (currDistance < distance) { 
 				closest = go; 
 				distance = currDistance; 
@@ -85,30 +87,30 @@ public class Tower : MonoBehaviour {
         type = _type;
         if(type == TowerType.eLaser) {
             GetComponent<SpriteRenderer>().sprite = laserSprite;
-            cooldown = 0.1f;
+            cooldown = 0.25f;
             health = 50;
-            range = 10;
+            range = 150;
             damage = 1;
         } else if(type == TowerType.eLightning) {
             GetComponent<SpriteRenderer>().sprite = lightningSprite;
-            cooldown = 0.4f;
+            cooldown = 1f;
             health = 90;
-            range = 12;
+            range = 180;
             damage = 4;
         } else if (type == TowerType.eFireBall) {
             GetComponent<SpriteRenderer>().sprite = fireBallSprite;
-            cooldown = 0.7f;
+            cooldown = 1.5f;
             health = 80;
-            range = 20;
+            range = 300;
             damage = 1;
         } else if(type == TowerType.eIce) {
             GetComponent<SpriteRenderer>().sprite = iceSprite;
-            cooldown = 0.8f;
+            cooldown = 2f;
             health = 50;
-            range = 5;
+            range = 75;
             damage = 3;
         }
-        Vector3 sphereScale = new Vector3(range * 2, range * 2, 0);
+        Vector3 sphereScale = new Vector3(range * 0.07f, range * 0.07f, 0);
         sphere.transform.localScale = sphereScale;
         sphere.SetActive(false);
         maxHealth = health;

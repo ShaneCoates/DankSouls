@@ -24,7 +24,7 @@ public class Button : MonoBehaviour {
             if (type == Minion.minionType.eImp) count = 2;
 
             for (int i = 0; i < count; ++i) {
-                Minion obj = GameObject.Instantiate(minion);
+                Minion obj = GameObject.Instantiate(minion, minion.transform.position, minion.transform.rotation) as Minion;
                 obj.SetType(type);
             }
             manager.souls -= (int)type;
