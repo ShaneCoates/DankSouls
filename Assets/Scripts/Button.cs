@@ -6,6 +6,8 @@ public class Button : MonoBehaviour {
     public Minion minion;
     public Minion.minionType type;
     public GameManager manager;
+    public Sprite upSprite;
+    public Sprite downSprite;
 	// Use this for initialization
 	void Awake () {
 	
@@ -29,5 +31,12 @@ public class Button : MonoBehaviour {
             }
             manager.souls -= (int)type;
         }
+    }
+
+    public void Up() {
+        GetComponent<Image>().sprite = upSprite;
+    }
+    public void Down() {
+        GetComponent<Image>().sprite = downSprite;
     }
 }

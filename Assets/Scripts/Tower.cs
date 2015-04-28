@@ -39,9 +39,8 @@ public class Tower : MonoBehaviour {
 		    Vector3 targetDir = target.transform.position - transform.position;
             targetDir.y = 0;
             if (timer > cooldown) {
-                print(range);
-                print(targetDir.sqrMagnitude);
-                if ((range * 10) >= targetDir.sqrMagnitude) {
+
+                if ((range) >= targetDir.sqrMagnitude) {
                     Shoot();
                     timer = 0;
                 }
@@ -89,28 +88,28 @@ public class Tower : MonoBehaviour {
             GetComponent<SpriteRenderer>().sprite = laserSprite;
             cooldown = 0.25f;
             health = 50;
-            range = 150;
+            range = 1.5f;
             damage = 1;
         } else if(type == TowerType.eLightning) {
             GetComponent<SpriteRenderer>().sprite = lightningSprite;
             cooldown = 1f;
             health = 90;
-            range = 180;
+            range = 1.8f;
             damage = 4;
         } else if (type == TowerType.eFireBall) {
             GetComponent<SpriteRenderer>().sprite = fireBallSprite;
             cooldown = 1.5f;
             health = 80;
-            range = 300;
+            range = 3.0f;
             damage = 1;
         } else if(type == TowerType.eIce) {
             GetComponent<SpriteRenderer>().sprite = iceSprite;
             cooldown = 2f;
             health = 50;
-            range = 75;
+            range = 7.0f;
             damage = 3;
         }
-        Vector3 sphereScale = new Vector3(range * 0.07f, range * 0.07f, 0);
+        Vector3 sphereScale = new Vector3(range, range, 0);
         sphere.transform.localScale = sphereScale;
         sphere.SetActive(false);
         maxHealth = health;
