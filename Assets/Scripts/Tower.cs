@@ -4,6 +4,7 @@ using System.Collections;
 public class Tower : MonoBehaviour {
 	GameObject closest;
 	GameObject target;
+    public GameObject manager;
     public GameObject bullet;
     public float range;
     public float cooldown;
@@ -39,7 +40,6 @@ public class Tower : MonoBehaviour {
 		    Vector3 targetDir = target.transform.position - transform.position;
             targetDir.y = 0;
             if (timer > cooldown) {
-
                 if ((range) >= targetDir.sqrMagnitude) {
                     Shoot();
                     timer = 0;
@@ -50,7 +50,7 @@ public class Tower : MonoBehaviour {
 	}
 
     void OnMouseEnter() {
-        sphere.SetActive(true);
+       // sphere.SetActive(true);
     }
 
     void OnMouseExit()
@@ -63,6 +63,7 @@ public class Tower : MonoBehaviour {
         g.GetComponent<Bullet>().target = target;
         g.transform.position = transform.position;
         g.GetComponent<Bullet>().damage = damage;
+        g.GetComponent<Bullet>().type = type;
     }
 
 	GameObject FindClosest() {
@@ -88,30 +89,34 @@ public class Tower : MonoBehaviour {
             GetComponent<SpriteRenderer>().sprite = laserSprite;
             cooldown = 0.25f;
             health = 50;
-            range = 1.5f;
+            range = 450;
             damage = 1;
         } else if(type == TowerType.eLightning) {
             GetComponent<SpriteRenderer>().sprite = lightningSprite;
             cooldown = 1f;
             health = 90;
-            range = 1.8f;
+            range = 540;
             damage = 4;
         } else if (type == TowerType.eFireBall) {
             GetComponent<SpriteRenderer>().sprite = fireBallSprite;
             cooldown = 1.5f;
             health = 80;
-            range = 3.0f;
+            range = 900;
             damage = 1;
         } else if(type == TowerType.eIce) {
             GetComponent<SpriteRenderer>().sprite = iceSprite;
             cooldown = 2f;
             health = 50;
-            range = 7.0f;
+            range = 2100;
             damage = 3;
         }
         Vector3 sphereScale = new Vector3(range, range, 0);
         sphere.transform.localScale = sphereScale;
         sphere.SetActive(false);
         maxHealth = health;
+    }
+    public void Kill() {
+        gameObject.SetActive(false);
+        manager.GetComponent<GameManager>().souls += 50;
     }
 }

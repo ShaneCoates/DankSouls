@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class Minion : MonoBehaviour {
+    public GameObject manager;
 	GameObject target;
     public int health = 5;
     public int speed;
@@ -15,6 +16,8 @@ public class Minion : MonoBehaviour {
     public Sprite down;
     Vector3 lastPos;
     Vector3 theScale;
+    float normalSpeed;
+    float slowCooldown;
     public enum minionType
     {
         eSkeleton = 5,
@@ -29,6 +32,8 @@ public class Minion : MonoBehaviour {
 		FindClosest ();
         GetComponent<NavMeshAgent>().updateRotation = false;
         theScale = transform.localScale;
+        normalSpeed = GetComponent<NavMeshAgent>().speed;
+        slowCooldown = 0f;
         //transform.rotation = new Quaternion(90, transform.rotation.y, transform.rotation.z, 1);
 	}
 
@@ -55,15 +60,15 @@ public class Minion : MonoBehaviour {
 				} 
 			}
 		}
-    	GetComponent<NavMeshAgent> ().destination = target.transform.position;
+    	GetComponent<NavMeshAgent>().destination = target.transform.position;
         GetComponent<NavMeshAgent>().acceleration = speed;
+        GetComponent<NavMeshAgent>().speed = speed;
 	}
 
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Finish") {
-			other.gameObject.SetActive(false);
-			GameObject.Destroy(other.gameObject);
-			FindClosest();
+			GameObject.Destroy(this.gameObject);
+            other.gameObject.GetComponent<Finish>().Hit();
 		}
         if(other.gameObject.tag == "Bullet") {
             health -= other.gameObject.GetComponent<Bullet>().damage;
@@ -71,35 +76,47 @@ public class Minion : MonoBehaviour {
             if(health <= 0) {
                 GameObject.Destroy(gameObject);
             }
+            if (other.gameObject.GetComponent<Bullet>().type == Tower.TowerType.eIce) {
+                GetComponent<NavMeshAgent>().speed -= 1;
+                slowCooldown = 0.5f;
+            }
         }
 	}
 
     void OnTriggerStay(Collider other) {
-        if (other.gameObject.tag == "Tower") {
-            Debug.Log("tower");
+        if (other.gameObject.tag == "Tower" && damage > 0) {
+            if (cooldown <= 0) {
+                target.GetComponent<Tower>().health -= damage;
+                cooldown = 0.7f;
+            }   
         }
     }
 
 	// Update is called once per frame
 	void Update () {
-        if(!target.activeInHierarchy) {
-            FindClosest();
-            Debug.Log("it died");
-        }               
-        
-        float distance = Vector3.Distance(transform.position, target.transform.position);
-        if (distance <= 2)
+        if (damage > 0)
         {
-            cooldown -= Time.deltaTime;
-            if (cooldown <= 0) {
-                target.GetComponent<Tower>().health -= damage;
-                if (target.GetComponent<Tower>().health <= 0) {
-                    target.SetActive(false);
+            if (!target.activeInHierarchy)
+            {
+                FindClosest();
+                Debug.Log("it died");
+            }
+            else
+            {
+                if (target.GetComponent<Tower>().health <= 0)
+                {
+                    target.GetComponent<Tower>().Kill();
                     FindClosest();
                 }
-                cooldown = 0.7f;
             }
         }
+        slowCooldown -= Time.deltaTime;
+        if (slowCooldown <= 0) {
+            GetComponent<NavMeshAgent>().speed = normalSpeed;
+        }
+        cooldown -= Time.deltaTime;
+
+        
         Vector3 heading = lastPos - transform.position;
         float dist = heading.magnitude;
         Vector3 direction = heading / dist;
